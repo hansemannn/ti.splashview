@@ -14,18 +14,24 @@
 {
     if (splashView == nil) {
         id image = [[self proxy] valueForKey:@"image"];
-        id backgroundColor = [[self proxy] valueForKey:@"backgroundColor"];
-        id iconStartSize = [[self proxy] valueForKey:@"iconStartSize"];
+        id path = [[self proxy] valueForKey:@"path"];
+        id fillColor = [[self proxy] valueForKey:@"fillColor"];
     
         ENSURE_TYPE(image, NSString);
-        ENSURE_TYPE(backgroundColor, NSString);
-        ENSURE_TYPE_OR_NIL(iconStartSize, NSDictionary);
+        ENSURE_TYPE(fillColor, NSString);
         
-        splashView = [CBZSplashView splashViewWithIcon:[TiUtils image:image proxy:self.proxy] backgroundColor:[[TiUtils colorValue:backgroundColor] _color]];
-        
-        if (iconStartSize) {
-            [splashView setIconStartSize:CGSizeMake(300,300)];
+        if ((image && path) || (!image && !path)) {
+            NSLog(@"[ERROR] Ti.SplashView: Use either a path or an image");
+            return;
         }
+        
+        if (image) {
+            splashView = [CBZSplashView splashViewWithIcon:[TiUtils toImage:image proxy:self.proxy] backgroundColor:[[TiUtils colorValue:fillColor] _color]];
+        } else if (path) {
+            NSLog(@"[ERROR] Ti.SplashView: The path serialization is not implemented, yet!");
+        }
+        
+        [splashView setAutoresizingMask:UIViewAutoresizingNone];
         
         [self addSubview:splashView];
     }
@@ -45,38 +51,7 @@
 }
 #endif
 
-#pragma mark Public APIs
-
-- (void)setWidth_:(id)width_
-{
-    width = TiDimensionFromObject(width_);
-    [self updateContentMode];
-}
-
-- (void)setHeight_:(id)height_
-{
-    height = TiDimensionFromObject(height_);
-    [self updateContentMode];
-}
-
 #pragma mark Layout helper
-
-- (void)updateContentMode
-{
-    if (self != nil) {
-        [self setContentMode:[self contentModeForFluidView]];
-    }
-}
-
-- (UIViewContentMode)contentModeForFluidView
-{
-    if (TiDimensionIsAuto(width) || TiDimensionIsAutoSize(width) || TiDimensionIsUndefined(width) ||
-        TiDimensionIsAuto(height) || TiDimensionIsAutoSize(height) || TiDimensionIsUndefined(height)) {
-        return UIViewContentModeScaleAspectFit;
-    } else {
-        return UIViewContentModeScaleToFill;
-    }
-}
 
 - (void)frameSizeChanged:(CGRect)frame bounds:(CGRect)bounds
 {
@@ -85,52 +60,6 @@
     }
     
     [super frameSizeChanged:frame bounds:bounds];
-}
-
-- (CGFloat)contentWidthForWidth:(CGFloat)suggestedWidth
-{
-    if (autoWidth > 0) {
-        //If height is DIP returned a scaled autowidth to maintain aspect ratio
-        if (TiDimensionIsDip(height) && autoHeight > 0) {
-            return roundf(autoWidth*height.value/autoHeight);
-        }
-        return autoWidth;
-    }
-    
-    CGFloat calculatedWidth = TiDimensionCalculateValue(width, autoWidth);
-    if (calculatedWidth > 0) {
-        return calculatedWidth;
-    }
-    
-    return 0;
-}
-
-- (CGFloat)contentHeightForWidth:(CGFloat)width_
-{
-    if (width_ != autoWidth && autoWidth>0 && autoHeight > 0) {
-        return (width_*autoHeight/autoWidth);
-    }
-    
-    if (autoHeight > 0) {
-        return autoHeight;
-    }
-    
-    CGFloat calculatedHeight = TiDimensionCalculateValue(height, autoHeight);
-    if (calculatedHeight > 0) {
-        return calculatedHeight;
-    }
-    
-    return 0;
-}
-
-- (UIViewContentMode)contentMode
-{
-    if (TiDimensionIsAuto(width) || TiDimensionIsAutoSize(width) || TiDimensionIsUndefined(width) ||
-        TiDimensionIsAuto(height) || TiDimensionIsAutoSize(height) || TiDimensionIsUndefined(height)) {
-        return UIViewContentModeScaleAspectFit;
-    } else {
-        return UIViewContentModeScaleToFill;
-    }
 }
 
 @end

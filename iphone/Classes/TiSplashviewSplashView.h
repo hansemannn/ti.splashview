@@ -9,11 +9,6 @@
 
 @interface TiSplashviewSplashView : TiUIView {
     CBZSplashView *splashView;
-    
-    TiDimension width;
-    TiDimension height;
-    CGFloat autoHeight;
-    CGFloat autoWidth;
 }
 
 - (CBZSplashView *)splashView;

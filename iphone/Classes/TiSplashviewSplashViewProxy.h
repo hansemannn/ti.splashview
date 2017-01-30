@@ -10,10 +10,10 @@
 
 }
 
-- (void)startAnimation:(id)unused;
+- (void)startAnimation:(id)args;
+
+- (void)setAnimationDuration:(id)value;
 
 - (void)setIconColor:(id)value;
-
-- (void)setIconStartSize:(id)value;
 
 @end

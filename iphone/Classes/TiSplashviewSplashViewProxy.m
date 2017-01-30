@@ -13,31 +13,41 @@
 
 #pragma mark Public API's
 
-- (void)startAnimation:(id)unused
+- (void)startAnimation:(id)args
 {
-    [[[self splashView] splashView] startAnimation];
+    ENSURE_UI_THREAD(startAnimation, args);
+    
+    if ([args count] == 1) {
+        KrollCallback *callback = nil;
+        ENSURE_ARG_AT_INDEX(callback, args, 0, KrollCallback);
+        
+        [[[self splashView] splashView] startAnimationWithCompletionHandler:^{
+            NSDictionary *propertiesDict = @{@"finished": NUMBOOL(YES)};
+            NSArray *invocationArray = [[NSArray alloc] initWithObjects:&propertiesDict count:1];
+            
+            [callback call:invocationArray thisObject:self];
+        }];
+    } else if ([args count] == 0) {
+        [[[self splashView] splashView] startAnimation];
+    } else {
+        NSLog(@"[ERROR] Ti.SplashView: Either provide a callback to startAnimation or use it without arguments.");
+    }
 }
 
+- (void)setAnimationDuration:(id)value
+{
+    ENSURE_TYPE(value, NSNumber);
+    ENSURE_UI_THREAD(setAnimationDuration, value);
+    
+    [[[self splashView] splashView] setAnimationDuration:[TiUtils floatValue:value]];
+}
+    
 - (void)setIconColor:(id)value
 {
     ENSURE_TYPE_OR_NIL(value, NSString);
+    ENSURE_UI_THREAD(setIconColor, value);
+
     [[[self splashView] splashView] setIconColor:[[TiUtils colorValue:value] _color]];
-}
-
-#pragma mark Helper
-
-USE_VIEW_FOR_CONTENT_WIDTH
-
-USE_VIEW_FOR_CONTENT_HEIGHT
-
-- (TiDimension)defaultAutoWidthBehavior:(id)unused
-{
-    return TiDimensionAutoFill;
-}
-
-- (TiDimension)defaultAutoHeightBehavior:(id)unused
-{
-    return TiDimensionAutoFill;
 }
 
 - (TiSplashviewSplashView *)splashView
