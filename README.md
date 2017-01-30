@@ -1,5 +1,5 @@
 # Ti.SplashView
-Support for the Twitter-like splash-screen library `CBZSplashView` in Titanium.
+Support for the Twitter-like splash-screen library [`CBZSplashView`](https://github.com/callumboddy/CBZSplashView) in Titanium. Thanks to @callumboddy for that awesome library!
 
 <img src="./twitter-gif.gif" height="500" alt="Twitter Example" />
 
