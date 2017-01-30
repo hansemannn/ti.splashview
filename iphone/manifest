@@ -1,0 +1,18 @@
+#
+# this is your module manifest and used by Titanium
+# during compilation, packaging, distribution, etc.
+#
+version: 1.0.0
+apiversion: 2
+architectures: armv7 arm64 i386 x86_64
+description: ti.splashview
+author: Hans Knoechel
+license: Apache 2
+copyright: Copyright (c) 2017 by Hans Knoechel
+
+# these should not be edited
+name: ti.splashview
+moduleid: ti.splashview
+guid: 6eb8f891-d8d3-4772-bab2-fa077603c684
+platform: iphone
+minsdk: 5.4.0
