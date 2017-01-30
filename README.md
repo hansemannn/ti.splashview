@@ -1,6 +1,8 @@
 # Ti.SplashView
 Support for the Twitter-like splash-screen library `CBZSplashView` in Titanium.
 
+<img src="./twitter-gif.gif" height="500" alt="Twitter Example" />
+
 ### Example
 ```js
 var Splash = require('ti.splashview');
