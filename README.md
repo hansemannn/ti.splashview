@@ -13,7 +13,7 @@ var win = Ti.UI.createWindow({
 
 var splashView = Splash.createSplashView({
     image: "appc-logo.png",
-    backgroundColor: "blue"
+    fillColor: "blue"
 });
 
 win.addEventListener('focus', function() {
